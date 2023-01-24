@@ -179,7 +179,6 @@ class PermissionTester:
 
     def __clean_up(self):
         """
-        If your cloud function requires cleanup after it's run, and you don't want to
-        or can't do the cleanup within the cloud function, implement it here.
+        If your cloud function requires cleanup after it's run, implement it here.
         """
         pass
