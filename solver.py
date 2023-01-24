@@ -2,8 +2,10 @@ import argparse
 import logging
 import sys
 
+from gcp_service import GcpService
 from src.minimum_finder import MinimumFinder
 from src.permission_tester import PermissionTester
+from terraform_service import TerraformService
 
 
 def main(argv):
@@ -22,10 +24,11 @@ def main(argv):
         help="Logging level. Default is WARNING.  Set to INFO to see detailed run information.",
     )
     args = parser.parse_args(argv)
-
     logging.basicConfig(level=args.log_level)
 
-    permission_tester = PermissionTester(args.function_name)
+    gcp_service = GcpService(args.function_name)
+    terraform_service = TerraformService(gcp_service)
+    permission_tester = PermissionTester(gcp_service, terraform_service)
     minimum_finder = MinimumFinder(
         permission_tester.does_function_pass_with_permissions
     )
