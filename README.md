@@ -37,10 +37,10 @@ turns out that the missing permission was 'iam.serviceAccounts.actAs'.
 ### Running the tool
 
 * Run the script: `python solver.py projects/<project>/locations/<location>/functions/<function>`
-  * This tool will modify the service account assigned to the cloud function and run the cloud function many times.  
-  Make sure you are using a service account that is not used for anything else, and that any side effects of running
+  * This tool will modify the service account assigned to the cloud function and run the cloud function many times.  Make 
+  sure you are using a service account that is not used for anything else, and that any side effects of running
   your cloud function successfully or unsuccessfully are cleaned up each time.
   * When we update permissions in GCP, it takes about a minute for the changes to propagate.  The script will wait two
   minutes after each permission update before running the function.  This means the script takes a few hours
   to complete.
-  * If you would like monitor more of the process while it runs, set the log level to info with the arg `-l INFO`
+  * If you would like monitor more of the process while it runs, set the log level to info with the arg `-l INFO`.
