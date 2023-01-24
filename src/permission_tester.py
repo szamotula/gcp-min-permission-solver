@@ -15,14 +15,6 @@ from google.cloud.storage.client import Client as StorageClient
 
 import requests
 
-TERRAFORM_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../terraform"))
-PERMISSIONS_FILE = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../terraform/permissions.json")
-)
-VARIABLES_FILE = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../terraform/variables.json")
-)
-
 
 class PermissionTester:
     def __init__(self, cloud_function_name):
@@ -39,7 +31,7 @@ class PermissionTester:
 
         self.__create_bucket_if_it_doesnt_exist("min-permission-solver-terraform-state")
         self.terraform = self.__initialize_terraform()
-        self.__import_service_account()
+        self.__import_service_account_if_it_isnt_imported()
 
         self.subscriber_client = pubsub_v1.SubscriberClient()
         self.subscription_name = self.subscriber_client.subscription_path(
@@ -73,7 +65,10 @@ class PermissionTester:
 
     @staticmethod
     def __initialize_terraform():
-        terraform = Terraform(working_dir=TERRAFORM_DIR)
+        terraform_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../terraform")
+        )
+        terraform = Terraform(working_dir=terraform_dir)
         return_code, stdout, stderr = terraform.init()
 
         if return_code != 0:
@@ -86,11 +81,13 @@ class PermissionTester:
             "project": self.project,
             "service_account_id": self.service_account["email"].split("@")[0],
         }
-
-        with open(VARIABLES_FILE, "w") as outfile:
+        variables_file = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../terraform/variables.json")
+        )
+        with open(variables_file, "w") as outfile:
             json.dump(variables, outfile)
 
-    def __import_service_account(self):
+    def __import_service_account_if_it_isnt_imported(self):
         return_code, stdout, stderr = self.terraform.cmd(
             "state show", "google_service_account.this"
         )
@@ -135,7 +132,7 @@ class PermissionTester:
         return tuple(permissions)
 
     @cache
-    def do_permissions_work(self, permissions):
+    def does_function_pass_with_permissions(self, permissions):
         logging.info(f"Updating role with new list of {len(permissions)} permissions")
         self.__update_permissions_in_service_account(permissions)
         logging.info("Waiting two minutes for permissions to update in GCP")
@@ -153,7 +150,10 @@ class PermissionTester:
         permissions_json = {
             "permission_lists": list(self.__divide_into_sized_chunks(permissions, 1000))
         }
-        with open(PERMISSIONS_FILE, "w") as outfile:
+        permissions_file = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../terraform/permissions.json")
+        )
+        with open(permissions_file, "w") as outfile:
             json.dump(permissions_json, outfile)
 
         return_code, stdout, stderr = self.terraform.apply(skip_plan=True)

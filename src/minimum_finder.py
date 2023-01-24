@@ -2,11 +2,10 @@ import logging
 
 
 class MinimumFinder:
-    def __init__(self, permission_tester):
-        self.permission_tester = permission_tester
+    def __init__(self, are_permissions_sufficient_function):
+        self.are_permissions_sufficient = are_permissions_sufficient_function
 
-    def find_smallest_permission_set(self):
-        passing_permissions = self.permission_tester.get_testable_permissions()
+    def find_smallest_permission_set(self, passing_permissions):
         number_of_splits = 2
 
         while True:
@@ -25,19 +24,23 @@ class MinimumFinder:
             for split_number in range(number_of_splits):
 
                 permission_split = permission_splits[split_number]
-                if self.permission_tester.do_permissions_work(permission_split):
+                if self.are_permissions_sufficient(permission_split):
                     passing_permissions = permission_split
                     number_of_splits = 2
-                    print(f"New reduced set of permissions: {passing_permissions}")
+                    print(
+                        f"New reduced set of {len(passing_permissions)} permissions: {passing_permissions}"
+                    )
                     break
 
                 permission_complement = self.__get_complement(
                     passing_permissions, permission_split
                 )
-                if self.permission_tester.do_permissions_work(permission_complement):
+                if self.are_permissions_sufficient(permission_complement):
                     passing_permissions = permission_complement
                     number_of_splits = 2
-                    print(f"New reduced set of permissions: {passing_permissions}")
+                    print(
+                        f"New reduced set of {len(passing_permissions)} permissions: {passing_permissions}"
+                    )
                     break
             else:
                 number_of_splits += 1
