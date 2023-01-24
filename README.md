@@ -14,7 +14,7 @@ turns out that the missing permission was 'iam.serviceAccounts.actAs'.
 
 ## Usage
 
-### Prerequisites
+### Setup
 
 * Create your Cloud Function:
   * Create a [Google Cloud Function](https://cloud.google.com/functions/) that performs your desired task.
@@ -31,7 +31,7 @@ turns out that the missing permission was 'iam.serviceAccounts.actAs'.
   * Download the [Service Account Key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#get-key) 
   for your service account.
     * Set the GOOGLE_APPLICATION_CREDENTIALS environment variable to the path of the downloaded key.
-  * Install the required dependencies: `pip install -r requirements.txt`
+* Install the required dependencies: `pip install -r requirements.txt`
 
 ### Running the tool
 
