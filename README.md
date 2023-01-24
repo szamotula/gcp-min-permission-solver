@@ -44,4 +44,4 @@ turns out that the missing permission was 'iam.serviceAccounts.actAs'.
   * When we update permissions in GCP, it takes about a minute for the changes to propagate.  The script will wait two
   minutes after each permission update before running the function.  This means the script takes a few hours
   to complete.
-  * If you would like monitor more of the process while it runs, set the log level to info with the arg `-l INFO`.
+  * If you would like to monitor more of the process while it runs, set the log level to info with the arg `-l INFO`.
