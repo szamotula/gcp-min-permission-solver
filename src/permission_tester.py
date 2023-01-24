@@ -5,9 +5,9 @@ from functools import cache
 
 class PermissionTester:
     def __init__(self, gcp_service, terraform_service, wait_time=120):
-        self.wait_time = wait_time
         self.gcp_service = gcp_service
         self.terraform_service = terraform_service
+        self.wait_time = wait_time
 
     def get_testable_permissions(self):
         page_token = None
@@ -39,7 +39,7 @@ class PermissionTester:
         try:
             self.__clean_up()
         except Exception as e:
-            logging.debug(f"Failed to clean up subscription: {e}")
+            logging.debug(f"Failed to clean up after function: {e}")
 
         return result
 
