@@ -1,6 +1,6 @@
 # gcp-min-permission-solver
 
-This is a tool to help you find the minimum permissions required to perform a task in GCP.  Given a GCP cloud function
+This script finds the minimum permissions required to perform a task in GCP.  Given a GCP cloud function
 it will find the minimum set of permissions required for that cloud function to succeed.
 
 ## Motivation
@@ -27,7 +27,8 @@ turns out that the missing permission was 'iam.serviceAccounts.actAs'.
     for your service account.
     * Set the GOOGLE_APPLICATION_CREDENTIALS environment variable to the path of the downloaded key.
 * Create your Cloud Function:
-  * Create a [Google Cloud Function](https://cloud.google.com/functions/) that performs your desired task.
+  * Create a [Google Cloud Function](https://cloud.google.com/functions/) with an HTTPS trigger that performs your 
+  desired task.
   * Assign a custom service account to the cloud function.  This service account will be modified to test permissions.
   * If your cloud function has side effects when run successfully or unsuccessfully, implement clean up in 
   `__clean_up()` in [permission_tester.py](./src/permission_tester.py) and give any additional roles needed to your
